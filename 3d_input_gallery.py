@@ -12,7 +12,14 @@ from time import sleep
 import serial
 import math
 
-DEBUG_PRINT = True
+# EXPERMENTAL music player
+DO_MUSIC = True
+try:
+	from pygame import mixer
+except ImportError:
+	DO_MUSIC = False
+
+DEBUG_PRINT = False
 
 WIN_W = 800
 WIN_H = 600
@@ -37,10 +44,12 @@ def hello(params):
 
 def popped(params):
 	# print "Button popped!"
+	toggle_music()
 	pass
 
 def slid(params):
 	# print "Slider set to %s" % (params['value'])
+	mixer.music.set_volume(params['value'])
 	pass
 
 pop_button.set_callback(popped)
@@ -80,6 +89,12 @@ def serial_init():
 		print("Failed to initialize serial port; running in debug mode")
 		sout = None
 
+def toggle_music():
+	if mixer.music.get_busy():
+		mixer.music.stop()
+	else:
+		mixer.music.play()
+
 def init():
 	serial_init()
 	glClearColor(0.0, 0.0, 0.2, 1.0)
@@ -89,6 +104,10 @@ def init():
 	glShadeModel(GL_SMOOTH)
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 	glLineWidth(2.0)
+	if DO_MUSIC:
+		mixer.init()
+		mixer.music.load('./song.mp3')
+	x_slider.do_callback()
 
 
 #TODO gluLookAt :)
