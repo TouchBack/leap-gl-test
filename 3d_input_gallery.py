@@ -163,7 +163,7 @@ def draw():
 				x = total_pos.x/l
 				y = total_pos.y/l
 				z = total_pos.z/l
-				pitch = (total_dir/l).pitch
+				pitch = (total_dir/l).angle_to(Vector(total_dir.x/l,0,total_dir.z/l))
 				yaw = (total_dir/l).yaw
 
 
